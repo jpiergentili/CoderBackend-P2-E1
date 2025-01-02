@@ -1,0 +1,77 @@
+<div class="container mt-4">
+  <h2>Registro de Usuario</h2>
+  <!-- Formulario para registrar un nuevo usuario -->
+  <form id="registerUserForm">
+    <div class="row mb-3">
+      <div class="col-md-6 mb-2">
+        <input type="text" id="first_name" name="first_name" class="form-control" placeholder="Nombre" required />
+      </div>
+      <div class="col-md-6 mb-2">
+        <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Apellido" required />
+      </div>
+      <div class="col-md-6 mb-2">
+        <input type="email" id="email" name="email" class="form-control" placeholder="Correo Electrónico" required />
+      </div>
+      <div class="col-md-6 mb-2">
+        <input type="number" id="age" name="age" class="form-control" placeholder="Edad" required />
+      </div>
+      <div class="col-md-6 mb-2">
+        <input type="password" id="password" name="password" class="form-control" placeholder="Contraseña" required />
+      </div>
+    </div>
+    <button type="button" class="btn btn-primary" onclick="registerUser()">Registrar Usuario</button>
+  </form>
+</div>
+
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  function registerUser() {
+    fetch('/api/users', {
+      method: 'POST',
+      body: JSON.stringify({
+        first_name: document.getElementById('first_name').value,
+        last_name: document.getElementById('last_name').value,
+        email: document.getElementById('email').value,
+        age: document.getElementById('age').value,
+        password: document.getElementById('password').value
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: data.error,
+          confirmButtonText: 'Aceptar'
+        });
+      } else {
+        document.getElementById('first_name').value = '';
+        document.getElementById('last_name').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('age').value = '';
+        document.getElementById('password').value = '';
+        Swal.fire({
+          icon: 'success',
+          title: 'Usuario registrado',
+          text: 'El usuario se ha registrado correctamente.',
+          confirmButtonText: 'Aceptar'
+        });
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Hubo un problema al registrar el usuario.',
+        confirmButtonText: 'Aceptar'
+      });
+    });
+  }
+</script>

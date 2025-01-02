@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cookie-parser": "^1.4.7",
     "express": "^4.19.2",
     "express-handlebars": "^8.0.1",
     "handlebars": "^4.7.8",
