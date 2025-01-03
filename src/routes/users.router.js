@@ -1,5 +1,6 @@
 import { Router } from "express";
 import userModel from "../models/user.model.js";
+import { signedCookie } from "cookie-parser";
 
 const router = Router();
 
@@ -12,6 +13,20 @@ router.get("/setCookie",(req, res) =>{
 router.get("/getCookie",(req, res) =>{
     const nombre = req.cookies.nombre;
     res.send("El valor del nombre de la cookie es: " + nombre)
+})
+
+router.get("/setSignedCookie",(req, res) =>{
+    res.cookie("signedCookie", "javier123", {maxAge: 900000, signed: true});
+    res.send("cookie firmada establecida correctamente")
+})
+
+router.get("/getSignedCookie",(req, res) =>{
+    const signedCookieValue = req.signedCookies.signedCookie;
+    if (signedCookieValue) {
+        res.send("El valor de signedCookieValue es: " + signedCookieValue)        
+    } else {
+        res.send("El valor de signedCookieValue ha sido alterado")
+    }
 })
 
 router.get("/deleteCookie",(req, res) =>{

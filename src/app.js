@@ -12,6 +12,13 @@ import usersRouter from './routes/users.router.js';
 const uri = 'mongodb+srv://jp2:Q1w2e3r4@jp-backend-coder01.bavi18s.mongodb.net/backendP1-EntregaFinal';
 const app = express();
 
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(__dirname + "/public"));
+
+app.use(cookieParser("aaasssbbb"))
+
 mongoose.set('strictQuery', false);
 
 const connectDB = async () => {
@@ -25,12 +32,6 @@ const connectDB = async () => {
 
 connectDB();
 
-// Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(__dirname + "/public"));
-
-app.use(cookieParser())
 
 // Configuración de Handlebars
 app.engine("handlebars", handlebars.engine({
