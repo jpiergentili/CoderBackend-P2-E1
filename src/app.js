@@ -30,6 +30,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));
 
+app.use(cookieParser())
+
 // Configuración de Handlebars
 app.engine("handlebars", handlebars.engine({
   runtimeOptions: {

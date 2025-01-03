@@ -3,6 +3,22 @@ import userModel from "../models/user.model.js";
 
 const router = Router();
 
+
+router.get("/setCookie",(req, res) =>{
+    res.cookie("nombre", "javier", {maxAge: 900000});
+    res.send("cookie establecida correctamente")
+})
+
+router.get("/getCookie",(req, res) =>{
+    const nombre = req.cookies.nombre;
+    res.send("El valor del nombre de la cookie es: " + nombre)
+})
+
+router.get("/deleteCookie",(req, res) =>{
+    res.clearCookie("nombre")
+    res.send("Se borro la cookie nombre")
+})
+
 // Ruta para la vista de registro de usuarios
 router.get("/register", (req, res) => {
   res.render("registerUser", { title: "Registro de Usuario", style: "register.css" });
