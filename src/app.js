@@ -4,6 +4,7 @@ import __dirname from "./utils.js";
 import handlebars from "express-handlebars";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser"
+import session from "express-session";
 import productsRouter from './routes/products.router.js';
 import cartsRouter from './routes/carts.router.js';
 import viewsRouter from './routes/views.router.js';
@@ -18,6 +19,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));
 
 app.use(cookieParser("aaasssbbb"))
+app.use(session({
+  //resave permite mantener la session activa en caso de que la sesion se mantenga inactiva. Si se deja en false, la sesion morira al salir.
+  resave: true, 
+  //saveUninitialized permite guardar cualquier session aun cuando el objeto de la session no tenga ningun contenido.
+  saveUninitialized: true
+}))
 
 mongoose.set('strictQuery', false);
 
@@ -58,6 +65,26 @@ app.get('/api/carts/:cid', async (req, res) => {
   const cart = await cartModel.findById(req.params.cid).populate('cartProducts.product');
   res.render('cartDetails', { cart });
 });
+
+app.get('/session', (req, res) =>{
+  //si al conectar la session ya existe entonces aumentar el contador
+  if (req.session.counter) {
+    req.session.counter++;
+    res.send(`se ha visitado el sitio ${req.session.counter} veces.`)
+    } else {
+    req.session.counter = 1;
+    res.send('Bienvenido!')
+  }
+})
+
+app.get("/logout", (req, res) =>{
+  req.session.destroy(err => {
+    if(!err){
+      res.send("Logout exitoso!")
+    }else{
+      res.send({status:"Logout ERROR", body: err})}
+  })
+})
 
 // Inicializar el servidor http
 app.listen(8080, () => {
