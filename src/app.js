@@ -25,14 +25,14 @@ app.use(cookieParser("aaasssbbb"))
 //Grabación de las sessions
 app.use(session({
   store: MongoStore.create({
-      mongoUrl:uri,
-      dbName: MONGO_DBNAME,
-      ttl: 60 * 60 * 24 // Expiración de 1 día
+    mongoUrl: uri,
+    dbName: MONGO_DBNAME,
+    ttl: 60 * 60 * 24,
   }),
   secret: 'mysecret',
-  resave: true,
-  saveUninitialized: true,
-}))
+  resave: false,
+  saveUninitialized: false,
+}));
 
 mongoose.set('strictQuery', false);
 

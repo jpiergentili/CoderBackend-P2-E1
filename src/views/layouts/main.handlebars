@@ -41,9 +41,6 @@
             <li class="nav-item">
               <a class="nav-link" href="/api/carts">Ver Carritos</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/realtimeproducts">Productos RT</a>
-            </li>
           </ul>
           <!-- Left links -->
         </div>
@@ -89,13 +86,13 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
                   <li>
-                    <a class="dropdown-item" href="#">My profile</a>
+                    <a class="dropdown-item" href="/api/session/perfil">My profile</a>
                   </li>
                   <li>
                     <a class="dropdown-item" href="#">Settings</a>
                   </li>
                   <li>
-                    <a class="dropdown-item" href="/sessions/logout">Logout</a>
+                    <a class="dropdown-item" href="#" onclick="logoutUser()">Logout</a>
                   </li>
                   <li><hr class="dropdown-divider"></li>
                   <li>
@@ -127,6 +124,20 @@
         </div>
       </footer>
 
+
+    <script>
+  function logoutUser() {
+    fetch('/api/session/logout', { method: 'POST' }) // Cambiar a POST
+      .then(response => {
+        if (response.ok) {
+          window.location.href = '/api/session/login'; // Redirigir a login
+        } else {
+          console.error('Error al cerrar sesión');
+        }
+      })
+      .catch(error => console.error('Error:', error));
+  }
+</script>
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
       integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
