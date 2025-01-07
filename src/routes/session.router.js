@@ -95,7 +95,7 @@ router.post('/restore-password', async (req, res) => {
       user.password = createHash(newPassword);
       await user.save();
 
-      return res.redirect('/login'); // Redirige a la vista de login
+      return res.redirect('/api/session/login');
 
   }catch (error) {
       return res.status(500).send({ status: 'error', message: 'Internal server error' });

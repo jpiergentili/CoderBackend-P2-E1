@@ -1,7 +1,7 @@
 <div class="container mt-4">
   <h2>Inicio de Sesión</h2>
   <!-- Formulario para iniciar sesión -->
-  <form id="loginForm">
+  <form id="loginForm" onsubmit="event.preventDefault(); loginUser();">
     <div class="row mb-3">
       <div class="col-md-6 mb-2">
         <input type="email" id="email" name="email" class="form-control" placeholder="Correo Electrónico" required />
@@ -10,8 +10,11 @@
         <input type="password" id="password" name="password" class="form-control" placeholder="Contraseña" required />
       </div>
     </div>
-    <button type="button" class="btn btn-primary" onclick="loginUser()">Iniciar Sesión</button>
+    <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
   </form>
+  <p class="mt-3">
+    ¿No tienes una cuenta? <a href="/api/session/register" class="btn btn-link">Regístrate aquí</a>
+  </p>
 </div>
 
 <!-- SweetAlert2 CDN -->
@@ -39,7 +42,7 @@
           confirmButtonText: 'Aceptar'
         });
       } else {
-        window.location.href = '/api/session/perfil'; // Cambiar a la página deseada después del login
+        window.location.href = '/api/session/perfil'; // Redirige al perfil
       }
     })
     .catch(error => {

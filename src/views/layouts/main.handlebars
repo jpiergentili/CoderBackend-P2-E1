@@ -127,10 +127,10 @@
 
     <script>
   function logoutUser() {
-    fetch('/api/session/logout', { method: 'POST' }) // Cambiar a POST
+    fetch('/api/session/logout', { method: 'POST' })
       .then(response => {
         if (response.ok) {
-          window.location.href = '/api/session/login'; // Redirigir a login
+          window.location.href = '/api/session/login';
         } else {
           console.error('Error al cerrar sesión');
         }
