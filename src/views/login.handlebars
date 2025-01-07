@@ -1,0 +1,55 @@
+<div class="container mt-4">
+  <h2>Inicio de Sesión</h2>
+  <!-- Formulario para iniciar sesión -->
+  <form id="loginForm">
+    <div class="row mb-3">
+      <div class="col-md-6 mb-2">
+        <input type="email" id="email" name="email" class="form-control" placeholder="Correo Electrónico" required />
+      </div>
+      <div class="col-md-6 mb-2">
+        <input type="password" id="password" name="password" class="form-control" placeholder="Contraseña" required />
+      </div>
+    </div>
+    <button type="button" class="btn btn-primary" onclick="loginUser()">Iniciar Sesión</button>
+  </form>
+</div>
+
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  function loginUser() {
+    fetch('/api/session/login', {
+      method: 'POST',
+      body: JSON.stringify({
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: data.error,
+          confirmButtonText: 'Aceptar'
+        });
+      } else {
+        window.location.href = '/dashboard'; // Cambiar a la página deseada después del login
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Hubo un problema al iniciar sesión.',
+        confirmButtonText: 'Aceptar'
+      });
+    });
+  }
+</script>
