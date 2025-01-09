@@ -44,23 +44,20 @@
         'Content-Type': 'application/json'
       }
     })
-    .then(response => response.json())
+    .then(response => {
+      if (response.redirected) {
+        window.location.href = response.url; // Redirige al login si hay redirección
+      } else {
+        return response.json();
+      }
+    })
     .then(data => {
-      if (data.error) {
+      if (data?.error) {
         Swal.fire({
           icon: 'error',
           title: 'Error',
           text: data.error,
           confirmButtonText: 'Aceptar'
-        });
-      } else {
-        Swal.fire({
-          icon: 'success',
-          title: 'Usuario registrado',
-          text: 'El usuario se ha registrado correctamente.',
-          confirmButtonText: 'Aceptar'
-        }).then(() => {
-          window.location.href = '/api/session/login'; // Redirige al login
         });
       }
     })

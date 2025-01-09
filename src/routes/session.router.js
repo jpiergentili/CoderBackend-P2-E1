@@ -1,7 +1,7 @@
 import { Router } from "express";
-import userModel from "../models/user.model.js";
 import { createHash, isValidPassword } from '../utils.js'
 import  { isLoggedIn, isLoggedOut} from '../middlewares/auth.js';
+import passport from "passport";
 
 const router = Router();
 
@@ -11,28 +11,19 @@ router.get('/register', isLoggedOut, (req, res) => {
 });
 
 // Ruta para crear un nuevo usuario
-router.post("/register", async (req, res) => {
-  const { first_name, last_name, email, age, password } = req.body;
-
-  try {
-    const existingUser = await userModel.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ error: "El correo electrónico ya está registrado" });
+router.post("/register", async (req, res, next) => {
+  passport.authenticate("register", (err, user, info) => {
+    if (err) {
+      console.error("Error en el registro:", err);
+      return res.status(500).json({ error: "Error interno al registrar el usuario." });
+    }
+    if (!user) {
+      return res.status(400).json({ error: "El usuario ya está registrado." });
     }
 
-    const newUser = new userModel({ 
-      first_name, 
-      last_name, 
-      email, 
-      age, 
-      password: createHash(password) // Guardar la contraseña encriptada
-    });
-
-    await newUser.save();
-    res.status(201).json({ message: "Usuario registrado exitosamente" });
-  } catch (err) {
-    res.status(500).json({ error: "Error al registrar el usuario" });
-  }
+    console.log("Usuario registrado exitosamente");
+    return res.redirect("/api/session/login");
+  })(req, res, next);
 });
 
 // Ruta para mostrar la vista de inicio de sesión
@@ -40,31 +31,32 @@ router.get('/login', isLoggedOut, (req, res) => {
   res.render("login");
 });
 
-router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    const user = await userModel.findOne({ email });
+router.post("/login", (req, res, next) => {
+  passport.authenticate("login", (err, user, info) => {
+    if (err) {
+      console.error("Error en el login:", err);
+      return res.status(500).json({ error: "Error interno al iniciar sesión." });
+    }
     if (!user) {
-      return res.status(400).json({ error: "Usuario no encontrado" });
+      return res.status(400).json({ error: "Credenciales inválidas." });
     }
-    if (!isValidPassword(user, password)) {
-      return res.status(401).json({ error: "Contraseña incorrecta" });
-    }
-    
-    // Guardar todos los datos necesarios en la sesión
-    req.session.user = {
-      id: user._id,
-      email: user.email,
-      first_name: user.first_name,
-      last_name: user.last_name,
-      age: user.age,
-      role: user.role
-    };
-    
-    res.status(200).json({ message: "Inicio de sesión exitoso" });
-  } catch (err) {
-    res.status(500).json({ error: "Error al iniciar sesión" });
-  }
+
+    req.login(user, (err) => {
+      if (err) {
+        return res.status(500).json({ error: "Error al iniciar sesión." });
+      }
+
+      req.session.user = {
+        id: user._id,
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        age: user.age,
+        role: user.role,
+      };
+      return res.json({ status: "success", payload: req.session.user });
+    });
+  })(req, res, next);
 });
 
 // Ruta para mostrar la vista de perfil
@@ -78,6 +70,10 @@ router.get('/perfil', isLoggedIn, (req, res) => {
     user: req.session.user
   });
 });
+
+router.get('/faillogin',(req, res) => {
+  res.send({ error: "Error al iniciar sesión" })
+})
 
 router.get('/restore-password', isLoggedOut, (req, res) => {
   res.render('restorePassword');

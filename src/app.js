@@ -3,13 +3,15 @@ import path from "path";
 import __dirname from "./utils.js";
 import handlebars from "express-handlebars";
 import mongoose from "mongoose";
-import MongoStore from 'connect-mongo'
-import cookieParser from "cookie-parser"
+import MongoStore from 'connect-mongo';
+import cookieParser from "cookie-parser";
 import session from "express-session";
 import productsRouter from './routes/products.router.js';
 import cartsRouter from './routes/carts.router.js';
 import viewsRouter from './routes/views.router.js';
 import sessionRouter from './routes/session.router.js';
+import passport from 'passport';
+import initializePassport from './config/passport.config.js';
 
 const uri = 'mongodb+srv://jp2:Q1w2e3r4@jp-backend-coder01.bavi18s.mongodb.net/';
 const MONGO_DBNAME = "backendP1-EntregaFinal"
@@ -35,6 +37,11 @@ app.use(session({
 }));
 
 mongoose.set('strictQuery', false);
+
+//configuracion de passport
+initializePassport()
+app.use(passport.initialize());
+app.use(passport.session())
 
 const connectDB = async () => {
   try {
