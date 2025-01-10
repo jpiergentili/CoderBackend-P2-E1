@@ -5,6 +5,23 @@ import passport from "passport";
 
 const router = Router();
 
+router.get('/github', passport.authenticate('github', { scope: ['user:email'] }) , async (req, res) => {});
+
+router.get('/githubcallback', passport.authenticate('github', {
+  failureRedirect: '/api/session/faillogin'
+}), (req, res) => {
+  // Almacenar al usuario autenticado en la sesión
+  req.session.user = {
+    id: req.user._id,
+    email: req.user.email,
+    first_name: req.user.first_name,
+    last_name: req.user.last_name,
+    age: req.user.age,
+    role: req.user.role
+  };
+  res.redirect('/api/session/perfil');
+});
+
 // Ruta para mostrar la vista de registro
 router.get('/register', isLoggedOut, (req, res) => {
   res.render("register");

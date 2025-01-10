@@ -1,74 +1,93 @@
 <div class="container mt-4">
   <h2>Registro de Usuario</h2>
   <!-- Formulario para registrar un nuevo usuario -->
-  <form id="registerUserForm" onsubmit="event.preventDefault(); registerUser();">
+  <form
+    id="registerUserForm"
+    onsubmit="event.preventDefault(); registerUser();"
+  >
     <div class="row mb-3">
       <div class="col-md-6 mb-2">
-        <input type="text" id="first_name" name="first_name" class="form-control" placeholder="Nombre" required />
+        <input
+          type="text"
+          id="first_name"
+          name="first_name"
+          class="form-control"
+          placeholder="Nombre"
+          required
+        />
       </div>
       <div class="col-md-6 mb-2">
-        <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Apellido" required />
+        <input
+          type="text"
+          id="last_name"
+          name="last_name"
+          class="form-control"
+          placeholder="Apellido"
+          required
+        />
       </div>
       <div class="col-md-6 mb-2">
-        <input type="email" id="email" name="email" class="form-control" placeholder="Correo Electrónico" required />
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="form-control"
+          placeholder="Correo Electrónico"
+          required
+        />
       </div>
       <div class="col-md-6 mb-2">
-        <input type="number" id="age" name="age" class="form-control" placeholder="Edad" required />
+        <input
+          type="number"
+          id="age"
+          name="age"
+          class="form-control"
+          placeholder="Edad"
+          required
+        />
       </div>
       <div class="col-md-6 mb-2">
-        <input type="password" id="password" name="password" class="form-control" placeholder="Contraseña" required />
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="form-control"
+          placeholder="Contraseña"
+          required
+        />
       </div>
     </div>
     <button type="submit" class="btn btn-primary">Registrar Usuario</button>
   </form>
   <p class="mt-3">
-    ¿Ya tienes una cuenta? <a href="/api/session/login" class="btn btn-link">Inicia sesión aquí</a>
+    ¿Ya tienes una cuenta?
+    <a href="/api/session/login" class="btn btn-link">Inicia sesión aquí</a>
   </p>
+  <div class="mt-4">
+    <a href="/api/session/github" class="btn btn-dark">
+      <img src="/images/github-logo.png" alt="GitHub Logo" width="20" style="margin-right: 10px;" />
+      Registrarse con GitHub
+    </a>
+  </div>
 </div>
 
 <!-- SweetAlert2 CDN -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-  function registerUser() {
-    fetch('/api/session/register', {
-      method: 'POST',
-      body: JSON.stringify({
-        first_name: document.getElementById('first_name').value,
-        last_name: document.getElementById('last_name').value,
-        email: document.getElementById('email').value,
-        age: document.getElementById('age').value,
-        password: document.getElementById('password').value
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(response => {
-      if (response.redirected) {
-        window.location.href = response.url; // Redirige al login si hay redirección
-      } else {
-        return response.json();
-      }
-    })
-    .then(data => {
-      if (data?.error) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: data.error,
-          confirmButtonText: 'Aceptar'
-        });
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Hubo un problema al registrar el usuario.',
-        confirmButtonText: 'Aceptar'
-      });
-    });
-  }
+  function registerUser() { fetch('/api/session/register', { method: 'POST',
+  body: JSON.stringify({ first_name:
+  document.getElementById('first_name').value, last_name:
+  document.getElementById('last_name').value, email:
+  document.getElementById('email').value, age:
+  document.getElementById('age').value, password:
+  document.getElementById('password').value }), headers: { 'Content-Type':
+  'application/json' } }) .then(response => { if (response.redirected) {
+  window.location.href = response.url; // Redirige al login si hay redirección }
+  else { return response.json(); } }) .then(data => { if (data?.error) {
+  Swal.fire({ icon: 'error', title: 'Error', text: data.error,
+  confirmButtonText: 'Aceptar' }); } }) .catch(error => {
+  console.error('Error:', error); Swal.fire({ icon: 'error', title: 'Error',
+  text: 'Hubo un problema al registrar el usuario.', confirmButtonText:
+  'Aceptar' }); }); }
 </script>
